@@ -87,15 +87,15 @@ A base de dados utilizada neste estudo consiste em imagens médicas volumétrica
 Características do dataset:
 •	Total de volumes: 342 exames.
 •	Divisão:
-o	Treinamento: 260 volumes (76%).
-o	Validação: 47 volumes (14%).
-o	Teste: 35 volumes (10%).
+    o	Treinamento: 260 volumes (76%).
+    o	Validação: 47 volumes (14%).
+    o	Teste: 35 volumes (10%).
 
 •	Dimensões originais: entre 384 × 384 × 176 voxels, variando em profundidade (slices), altura e largura.
 •	Modalidade: imagens em escala de cinza (single-channel), representando densidade ou intensidade do tecido.
 •	Distribuição aleatória: a divisão foi realizada garantindo representatividade para cada conjunto, evitando vieses na avaliação do modelo.
 •	Estrutura de diretórios suportada:
-Base_de_Dados/
+Base_de_Dados/ <br>
 ├── Paciente_001/
 │   ├── imagem_001.nrrd            # Volume de RM original
 │   └── imagem_001.seg.nrrd      # Máscara de segmentação manual
@@ -128,20 +128,28 @@ A escolha do MONAI se deve à sua integração nativa com PyTorch, fornecendo tr
 
 2.3.
 Pré-Processamento
+
 O pré-processamento é uma etapa crítica para padronizar volumes de diferentes exames, reduzir variabilidade e preparar os dados para a U-Net 3D (Kondrateva et al., 2022). As etapas realizadas foram:
+
 1.	Carregamento do volume (LoadImaged): arquivos NRRD foram convertidos em tensores PyTorch. Este passo assegura que os dados possam ser manipulados de forma eficiente em pipelines de aprendizado profundo.
 Considerações técnicas:
 •	Mantém dimensões originais do volume para evitar distorção espacial.
 •	Permite leitura de metadados como spacing e orientação.
+
 2.	Garante o canal como primeira dimensão (EnsureChannelFirstd): o modelo espera entrada no formato (C, D, H, W), sendo C = 1 (volumes são monocanais). Essa transformação evita erros de dimensionalidade e garante compatibilidade com camadas convolucionais 3D.
+
 3.	Padronização de espaçamento (Spacingd): todos os volumes foram reamostrados para 1,5 × 1,5 × 1,5 mm³, evitando distorções anatômicas, assegurando consistência volumétrica e melhor aprendizado de padrões 3D pela rede.
+
 4.	Correção de orientação (Orientationd): volumes convertidos para padrão RAS (Right-Anterior-Superior). Isso garante que:
 •	O modelo aprenda localização anatômica relativa (direita/esquerda, superior/inferior)
 •	Evita confusões em regiões simétricas (como rins, pulmões, hemisférios cerebrais), a correção garante que o modelo não troque esquerda e direita. Para estruturas assimétricas (como fígado ou baço), garante que elas estejam sempre no mesmo lado anatômico, conforme a convenção (fígado à direita, baço à esquerda).
+
 5.	Normalização de intensidade (NormalizeIntensityd): intensidades ajustadas para média zero e desvio padrão unitário. Isso permite que o modelo:
 •	Seja robusto a variações de intensidade entre scanners
 •	Aprenda padrões anatômicos sem viés de intensidade absoluta
+
 6.	Redimensionamento (ResizeD): volumes ajustados para 128 × 128 × 128 voxels, equilibrando detalhes anatômicos e limitações de memória GPU. Permite treinamento em GPU comum. Isso foi feito para permitir treinamento em GPU comum e reduzir o tempo computacional de inferência.
+
 7.	Conversão final para tensor (EnsureTyped): compatível com MONAI para treinamento e inferência, garantindo integração com DataLoaders, pipelines e funções de loss.
 
 Tabela 2.1: Resumo do Pré-Processamento
@@ -153,7 +161,9 @@ Após essas transformações, todos os volumes apresentaram shape uniforme, pron
 
 2.4.
 Aumento de Dados (Data Augmentation)
+
 Para aumentar a robustez do modelo e prevenir sobreajuste, são aplicadas transformações geométricas aleatórias:
+
 •	Transformações Espaciais:
 o	Rotações em múltiplos eixos
 RandRotate90d: Rotações de 90°, 180° ou 270°
@@ -175,8 +185,11 @@ o	Previne viés em direção à classe majoritária
 
 2.5.
 Arquitetura da U-Net 3D
+
 O modelo U-Net 3D foi implementado por meio do módulo monai.networks.nets.UNet da biblioteca MONAI. A definição dos parâmetros arquiteturais considerou a resolução dos volumes de entrada, a capacidade de memória da GPU e a complexidade anatômica da estrutura de interesse.
+
 O modelo foi inicializado com pesos aleatórios e treinado do zero, utilizando monitoramento contínuo da métrica Dice no conjunto de validação. O melhor modelo foi automaticamente salvo com base no maior valor de Dice alcançado, garantindo que o resultado final representasse o estado de treinamento de maior desempenho.
+
 A U-Net 3D implementada segue a estrutura clássica proposta por Ronneberger et al. (2015), com adaptações para o processamento de imagens volumétricas tridimensionais. Suas principais configurações são:
 •	Entrada: volume tridimensional (C, D, H, W), com C = 1, representando imagens em escala de cinza;
 •	Saída: máscara binária tridimensional com C = 1, correspondente à estrutura segmentada;
@@ -219,14 +232,20 @@ Durante o treinamento, a métrica Dice foi monitorada a cada época no conjunto 
 Inferência
 
 A inferência em novos volumes seguiu os mesmos passos de pré-processamento aplicados ao treino.
+
 1.	Carregamento do Volume: Arquivo NRRD lido com a biblioteca nrrd e processado pelos mesmos transforms do treinamento, garantindo consistência.
+
 2.	Adição de dimensão de batch: Tensor com shape (1, 1, D, H, W) para compatibilidade com o modelo 3D.
+
 3.	Sliding Window Inference: Necessário para processar volumes grandes que não cabem na memória GPU de uma só vez.
-o	Tamanho da janela: (96, 96, 96).
-o	Sobreposição entre janelas: 25%.
-o	Batch size: 1.
+    o	Tamanho da janela: (96, 96, 96).
+    o	Sobreposição entre janelas: 25%.
+    o	Batch size: 1.
+
 4.	Aplicação de sigmoid: Transformou logits da saída em probabilidades entre 0 e 1.
+
 5.	Threshold de 0.5: Para binarização da máscara predita.
+
 6.	Resultados:
 •	Shape da máscara predita: (128, 128, 128).
 •	Percentual de voxels positivos: Depende do volume, mas o pipeline permite análise quantitativa do volume segmentado.
@@ -255,6 +274,7 @@ Matrícula: 123.456.789
 Pontifícia Universidade Católica do Rio de Janeiro
 
 Curso de Pós Graduação *Business Intelligence Master*
+
 
 
 
