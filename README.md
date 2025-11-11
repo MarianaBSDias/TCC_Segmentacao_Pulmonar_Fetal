@@ -1,1 +1,0 @@
-# TCC_Segmentacao_Pulmonar_Fetal
