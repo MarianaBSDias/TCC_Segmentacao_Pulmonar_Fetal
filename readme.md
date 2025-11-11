@@ -90,19 +90,6 @@ Características do dataset:
 o	Treinamento: 260 volumes (76%).
 o	Validação: 47 volumes (14%).
 o	Teste: 35 volumes (10%).
-Trecho de código com a divisão da base de dados:
-# =============================
-# SPLIT (train/val/test)
-# =============================
-
-# 10% para teste
-train_val, test = train_test_split(data_dicts, test_size = 0.1, random_state = 42)
-
-# Dos 90% restantes → 15% para validação
-train, val = train_test_split(train_val, test_size = 0.15, random_state = 42)
-
-# Imprimindo os tamanhos dos conjuntos
-print(f"📦 Train: {len(train)}  Val: {len(val)}  Test: {len(test)}")
 
 •	Dimensões originais: entre 384 × 384 × 176 voxels, variando em profundidade (slices), altura e largura.
 •	Modalidade: imagens em escala de cinza (single-channel), representando densidade ou intensidade do tecido.
@@ -268,6 +255,7 @@ Matrícula: 123.456.789
 Pontifícia Universidade Católica do Rio de Janeiro
 
 Curso de Pós Graduação *Business Intelligence Master*
+
 
 
 
