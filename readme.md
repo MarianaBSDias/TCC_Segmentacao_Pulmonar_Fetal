@@ -1,14 +1,8 @@
 
-
-
-
-
-
-
 <!-- antes  de enviar a versão final, solicitamos que todos os comentários, colocados para orientação ao aluno, sejam removidos do arquivo -->
 # Automatização de Segmentação Pulmonar Fetal  Através de Modelo de Rede Neural Convolucional U-Net 3D em Imagens de Ressonância Magnética
 
-#### Aluno: [Mariana Barros dos Santos Dias](https://github.com/MarianaBSDias/)
+#### Aluna: [Mariana Barros dos Santos Dias](https://github.com/MarianaBSDias/)
 #### Orientadora: [Manoela Kohler](https://github.com/manoelakohler).
 -->
 
@@ -98,7 +92,7 @@ A base de dados utilizada neste estudo consiste em **imagens médicas volumétri
 
 O formato NRRD é vantajoso por manter **metadados essenciais**, como espaçamento de *voxels*, orientação e dimensões originais, garantindo consistência no pré-processamento.
 
-**Características do dataset:**
+**Características do *dataset*:**
 - **Total de volumes:** 342 exames  
 - **Divisão:**
   - Treinamento: 260 volumes (76%)  
@@ -128,7 +122,7 @@ Base_de_Dados/
 └── ...
 
 
-A escolha desse dataset permitiu avaliar o desempenho do modelo em volumes complexos, com variabilidade anatômica e de qualidade de imagem típica de exames clínicos.
+A escolha desse *dataset* permitiu avaliar o desempenho do modelo em volumes complexos, com variabilidade anatômica e de qualidade de imagem típica de exames clínicos.
 
 **Formato NRRD:** padrão em neuroimagem, com suporte a metadados ricos.  
 **Metadados incluídos:**
@@ -174,7 +168,7 @@ Considerações técnicas: <br>
    - Evita confusões em regiões simétricas (como rins, pulmões, hemisférios cerebrais), a correção garante que o modelo não troque esquerda e direita. Para estruturas assimétricas (como fígado ou baço), garante que elas estejam sempre no mesmo lado anatômico, conforme a convenção (fígado à direita, baço à esquerda).
      
 5. **Normalização de intensidade (NormalizeIntensityd):** intensidades ajustadas para média zero e desvio padrão unitário. Isso permite que o modelo:
-   - Seja robusto a variações de intensidade entre scanners;
+   - Seja robusto a variações de intensidade entre *scanners*;
    - Aprenda padrões anatômicos sem viés de intensidade absoluta.
   
 6. **Redimensionamento (ResizeD):** volumes ajustados para `128 × 128 × 128` *voxels*, equilibrando detalhes anatômicos e limitações de memória GPU. Permite treinamento em GPU comum. Isso foi feito para permitir treinamento em GPU comum e reduzir o tempo computacional de inferência.
@@ -220,7 +214,7 @@ A U-Net 3D implementada segue a estrutura clássica proposta por Ronneberger *et
 - **Entrada:** volume tridimensional `(C, D, H, W)`, com `C = 1`, representando imagens em escala de cinza; 
 - **Saída:** máscara binária tridimensional com `C = 1`, correspondente à estrutura segmentada; 
 - **Filtros por nível do *encoder*:** `(8, 16, 32, 64)`, aumentando progressivamente conforme a profundidade da rede; 
-- **Strides (*downsampling*):** `(2, 2, 2)`, utilizados para redução sistemática da dimensionalidade espacial;  
+- ***Strides* (*downsampling*):** `(2, 2, 2)`, utilizados para redução sistemática da dimensionalidade espacial;  
 - **Conexões de salto (*skip connections*):** preservam detalhes anatômicos aprendidos nas camadas iniciais;
 - **Blocos residuais:** uma por nível, empregadas para evitar a degradação do gradiente e permitir aprendizado mais profundo;
 - **Normalização em lote (*Batch Normalization*) e função de ativação ReLU:** aplicadas em todas as camadas, a fim de estabilizar o treinamento e acelerar a convergência. 
@@ -440,7 +434,7 @@ No caso de gêmeos siameses toracópagos mostrado na **Figura 3.8**, os pulmões
 
 O modelo desenvolvido apresentou estabilidade nas últimas épocas de treinamento, evidenciada por pequenas flutuações nos valores do coeficiente de *Dice* obtidos durante a validação. Esse comportamento indica robustez e consistência no processo de aprendizado, refletindo a capacidade do modelo em manter o desempenho mesmo diante de variações sutis nas amostras de validação.  
 
-A estabilidade observada pode ser atribuída à normalização das intensidades e à padronização do espaçamento e da orientação (*spacing* e *orientation*) dos volumes, etapas que reduziram significativamente a influência de diferenças entre protocolos de aquisição e configurações de scanner. Esses procedimentos contribuíram para a robustez a variações de intensidade e aprimoraram a generalização do modelo.  
+A estabilidade observada pode ser atribuída à normalização das intensidades e à padronização do espaçamento e da orientação (*spacing* e *orientation*) dos volumes, etapas que reduziram significativamente a influência de diferenças entre protocolos de aquisição e configurações de *scanner*. Esses procedimentos contribuíram para a robustez a variações de intensidade e aprimoraram a generalização do modelo.  
 
 Nos conjuntos de teste, compostos por dados não utilizados nas fases de treinamento e validação, o modelo apresentou valores médios de *Dice* consistentes, o que reforça sua capacidade de generalização e confiabilidade para aplicações práticas.  
 
@@ -452,7 +446,7 @@ De forma geral, o modelo demonstrou-se robusto para uso clínico padrão; contud
 
 #### 3.6. Comparação com a Literatura
 
-A literatura especializada em segmentação volumétrica tridimensional (3D) demonstra que os modelos fundadores, como a 3D U-Net e a V-Net, estabeleceram uma faixa de valores para o Coeficiente de *Dice* — métrica amplamente utilizada para avaliar a sobreposição entre as predições do modelo e as anotações de referência — geralmente entre 0,70 e 0,85 para órgãos sólidos, como fígado, rins e cérebro (Çiçek *et al*., 2016; Milletari *et al*., 2016). Estudos mais recentes indicam que arquiteturas baseadas na U-Net 3D, quando combinadas com mecanismos de atenção (*attention blocks*) ou estratégias de ensemble, podem alcançar desempenhos superiores, atingindo valores entre 0,88 e 0,90 de *Dice Score*. Contudo, esses ganhos de acurácia estão frequentemente associados a um aumento expressivo do custo computacional e da complexidade arquitetural (Isensee *et al*., 2021).
+A literatura especializada em segmentação volumétrica tridimensional (3D) demonstra que os modelos fundadores, como a 3D U-Net e a V-Net, estabeleceram uma faixa de valores para o Coeficiente de *Dice* — métrica amplamente utilizada para avaliar a sobreposição entre as predições do modelo e as anotações de referência — geralmente entre 0,70 e 0,85 para órgãos sólidos, como fígado, rins e cérebro (Çiçek *et al*., 2016; Milletari *et al*., 2016). Estudos mais recentes indicam que arquiteturas baseadas na U-Net 3D, quando combinadas com mecanismos de atenção (*attention blocks*) ou estratégias de *ensemble*, podem alcançar desempenhos superiores, atingindo valores entre 0,88 e 0,90 de *Dice Score*. Contudo, esses ganhos de acurácia estão frequentemente associados a um aumento expressivo do custo computacional e da complexidade arquitetural (Isensee *et al*., 2021).
 
 No presente trabalho, o modelo desenvolvido obteve um *Dice* médio de 0,7608. Este valor se situa dentro da faixa reportada para as arquiteturas 3D fundadoras, confirmando a competitividade dos resultados face a modelos de referência, mesmo sem a incorporação de técnicas adicionais complexas. Ademais, o modelo proposto mantém uma estrutura arquitetural simples e eficiente, o que favorece sua integração em pipelines clínicos e aplicações que demandam baixo custo computacional e facilidade de implementação.
 
@@ -542,6 +536,7 @@ Curso de Pós Graduação *Business Intelligence Master*
 
 
 </body>
+
 
 
 
