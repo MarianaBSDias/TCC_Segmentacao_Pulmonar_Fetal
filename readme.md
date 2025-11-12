@@ -64,9 +64,7 @@ Trabalho apresentado ao curso [BI MASTER](https://ica.puc-rio.ai/bi-master) como
 
 Este trabalho de conclusão de curso (TCC) visa explorar, implementar e avaliar uma abordagem completa de segmentação de imagens médicas 3D utilizando U-Net 3D. A pesquisa inclui todas as etapas necessárias: aquisição e pré-processamento de imagens, definição e treinamento do modelo, avaliação quantitativa e qualitativa dos resultados e execução de inferência em novos volumes de teste.
 
-
-**1.1.**            <br>
-**Objetivos**       <br>
+#### 1.1 Objetivos
 
 Os objetivos específicos deste estudo incluem:
 
@@ -83,7 +81,7 @@ Os objetivos específicos deste estudo incluem:
 
 ### 2. Modelagem
 
-## Arquitetura Geral do Sistema
+#### Arquitetura Geral do Sistema
 
 O sistema implementa um **pipeline completo de processamento**:
 
@@ -91,7 +89,7 @@ O sistema implementa um **pipeline completo de processamento**:
 
 ---
 
-### 2.1. Base de Dados
+#### 2.1. Base de Dados
 
 A base de dados utilizada neste estudo consiste em **imagens médicas volumétricas** no formato **NRRD (Nearly Raw Raster Data)**, amplamente utilizado para armazenar dados tridimensionais de tomografia computadorizada (CT) e ressonância magnética (MRI).  
 
@@ -141,7 +139,7 @@ A escolha desse dataset permitiu avaliar o desempenho do modelo em volumes **com
 
 ---
 
-### 2.2. Hardware e Software
+#### 2.2. Hardware e Software
 
 O treinamento e a inferência foram realizados em ambiente **GPU CUDA**, utilizando:
 
@@ -155,7 +153,7 @@ A escolha do MONAI se deve à sua integração nativa com o PyTorch, oferecendo 
 
 ---
 
-### 2.3. Pré-Processamento
+#### 2.3. Pré-Processamento
 
 O pré-processamento padroniza volumes de diferentes exames, reduz variabilidade e prepara os dados para a **U-Net 3D** (Kondrateva et al., 2022).
 
@@ -176,7 +174,7 @@ Todos os volumes resultam em *shape* uniforme, prontos para entrada no modelo.
 
 ---
 
-### 2.4. Aumento de Dados (*Data Augmentation*)
+#### 2.4. Aumento de Dados (*Data Augmentation*)
 
 Para evitar *overfitting* e aumentar robustez, aplicam-se transformações geométricas aleatórias:
 
@@ -192,7 +190,7 @@ Para evitar *overfitting* e aumentar robustez, aplicam-se transformações geom�
 
 ---
 
-### 2.5. Arquitetura da U-Net 3D
+#### 2.5. Arquitetura da U-Net 3D
 
 O modelo **U-Net 3D** foi implementado via `monai.networks.nets.UNet`.  
 Os parâmetros consideram a resolução dos volumes, capacidade da GPU e complexidade anatômica.
@@ -214,7 +212,7 @@ A arquitetura mantém o formato em “U”, com **convoluções tridimensionais*
 
 ---
 
-### 2.6. Treinamento do Modelo
+#### 2.6. Treinamento do Modelo
 
 O modelo foi treinado por **450 épocas**, com **execução preferencial em GPU (CUDA)**, utilizando *batch size* = 1 devido ao alto consumo de memória.
 
@@ -229,7 +227,7 @@ O pipeline de dados seguiu o pré-processamento da Seção 3.3, assegurando **co
 
 ---
 
-### 2.7. Inferência
+#### 2.7. Inferência
 
 A inferência em novos volumes seguiu os mesmos passos de pré-processamento aplicados ao treino.
 
@@ -250,9 +248,7 @@ A inferência em novos volumes seguiu os mesmos passos de pré-processamento apl
 
 ### 3. Resultados
 
-## 3. Resultados e Discussão
-
-### 3.1. Avaliação Quantitativa
+#### 3.1. Avaliação Quantitativa
 
 A avaliação quantitativa do modelo de segmentação 3D foi realizada utilizando o **Dice Score**.  A função **DICE**, ou coeficiente de DICE, é uma métrica padrão de sobreposição para segmentação binária médica usada para avaliar a similaridade entre duas máscaras binárias: a predita e a manual (*ground truth*) (Zou *et al*., 2004):
 
@@ -284,114 +280,129 @@ Essa métrica é particularmente adequada para dados desbalanceados, onde a clas
 
 ---
 
-### 3.2. Evolução do Treinamento
+#### 3.2. Evolução do Treinamento
 
 O processo de treinamento da arquitetura U-Net 3D demonstrou uma evolução consistente e bem-comportada ao longo das 450 épocas planejadas. A análise da curva de aprendizado da Figura 4.1 revelou uma fase inicial de rápida convergência, onde o loss de treino reduziu de 1,8124 para aproximadamente 0,6 nas primeiras 50 épocas, enquanto o Dice Score na validação apresentou crescimento exponencial de 0,0043 para 0,5987. Na fase intermediária (épocas 50 – 200), observou-se uma consolidação do aprendizado com melhoria gradual do Dice Score para 0,7832, seguida por uma fase de refinamento (épocas 200 – 377) onde o modelo atingiu seu desempenho máximo com Dice de 0,8723 na validação, indicando que o modelo generaliza bem para dados não vistos durante o treino. O critério de early stopping, configurado com paciência de 50 épocas, interrompeu o treinamento de forma eficaz após a época 377, prevenindo overfitting e selecionando o modelo mais generalizável. <br>
-<img width="838" height="275" alt="image" src="https://github.com/user-attachments/assets/af4564c9-e750-4756-8e98-d0013bcf1ba7" />
+<img width="1189" height="390" alt="image" src="https://github.com/user-attachments/assets/6df85009-3e11-4517-ab07-efbf02b938fa" />
+
 
 **Figura 3.1:** Curvas de aprendizado: Loss de treinamento e Dice na validação  
 
 **Loss de Treino:**  
-- **Épocas 1 – 50:** Redução rápida de 1.8124 → ~0.6  
-- **Épocas 50 – 150:** Estabilização entre 0.5 – 0.7  
-- **Épocas 150 – 450:** Flutuação suave entre 0.4 – 0.6  
-- **Final (Época 450):** Loss = 0.5123  
+- **Épocas 1 – 50:** Redução rápida de 1,8124 → ~0,6  
+- **Épocas 50 – 150:** Estabilização entre 0,5 – 0,7  
+- **Épocas 150 – 450:** Flutuação suave entre 0,4 – 0,6  
+- **Final (Época 450):** Loss = 0,5123  
 
 **Dice Score de Validação:**  
-- **Épocas 1 – 50:** Crescimento rápido de 0.0043 → ~0.6  
-- **Épocas 50 – 200:** Melhora consistente até ~0.75  
-- **Épocas 200 – 450:** Estabilização com picos até 0.85 +  
-- **Melhor época:** Época 377 com Dice = 0.8723  
-- **Final (Época 450):** Dice = 0.8614  
+- **Épocas 1 – 50:** Crescimento rápido de 0.0043 → ~0,6  
+- **Épocas 50 – 200:** Melhora consistente até ~0,75  
+- **Épocas 200 – 450:** Estabilização com picos até 0,85 +  
+- **Melhor época:** Época 377 com Dice = 0,8723  
+- **Final (Época 450):** Dice = 0,8614  
 
 **Marcos Importantes do Treinamento:**  
-📅 Época 001: Loss = 1.8124 | Dice Val = 0.0043 ✅  
-📅 Época 050: Loss = 0.6231 | Dice Val = 0.5987 ✅  
-📅 Época 100: Loss = 0.5512 | Dice Val = 0.7124 ✅  
-📅 Época 150: Loss = 0.4987 | Dice Val = 0.7543 ✅  
-📅 Época 200: Loss = 0.4678 | Dice Val = 0.7832 ✅  
-📅 Época 250: Loss = 0.4523 | Dice Val = 0.8015 ✅  
-📅 Época 300: Loss = 0.4389 | Dice Val = 0.8237 ✅  
-📅 Época 350: Loss = 0.4312 | Dice Val = 0.8456 ✅  
-📅 Época 377: Loss = 0.4256 | Dice Val = 0.8723 ✅ ← MELHOR MODELO  
-📅 Época 400: Loss = 0.4289 | Dice Val = 0.8567  
-📅 Época 450: Loss = 0.5123 | Dice Val = 0.8614  
+📅 **Época 001:** Loss = 1,8124 | Dice Val = 0,0043 ✅  
+📅 **Época 050:** Loss = 0,6231 | Dice Val = 0,5987 ✅  
+📅 **Época 100:** Loss = 0,5512 | Dice Val = 0,7124 ✅  
+📅 **Época 150:** Loss = 0,4987 | Dice Val = 0,7543 ✅  
+📅 **Época 200:** Loss = 0,4678 | Dice Val = 0,7832 ✅  
+📅 **Época 250:** Loss = 0,4523 | Dice Val = 0,8015 ✅  
+📅 **Época 300:** Loss = 0,4389 | Dice Val = 0,8237 ✅  
+📅 **Época 350:** Loss = 0,4312 | Dice Val = 0,8456 ✅  
+📅 **Época 377:** Loss = 0,4256 | Dice Val = 0,8723 ✅ ← MELHOR MODELO  
+📅 **Época 400:** Loss = 0,4289 | Dice Val = 0,8567  
+📅 **Época 450:** Loss = 0,5123 | Dice Val = 0,8614  
 
 **Early Stopping:**  
-- Patience: 50 épocas  
-- Ativado na época: ~427 (após melhor Dice na época 377)  
-- Total de épocas efetivas: 427  
-- Modelo final salvo: Época 377  
+- **Patience:** 50 épocas  
+- **Ativado na época:** ~427 (após melhor Dice na época 377)  
+- **Total de épocas efetivas:** 427  
+- **Modelo final salvo:** Época 377  
 
 **Fases do Treinamento:**  
-- Fase Inicial (Épocas 1 – 50): Aprendizado rápido  
-- Fase de Consolidação (Épocas 50 – 200): Melhora consistente  
-- Fase de Refinamento (Épocas 200 – 377): Otimização fina  
-- Fase de Saturação (Épocas 377 – 427): Plateau com flutuações  
+- **Fase Inicial (Épocas 1 – 50):** Aprendizado rápido  
+- **Fase de Consolidação (Épocas 50 – 200):** Melhora consistente  
+- **Fase de Refinamento (Épocas 200 – 377):** Otimização fina  
+- **Fase de Saturação (Épocas 377 – 427):** Plateau com flutuações  
 
 **Estabilidade do Treinamento:**  
-- Loss: Estável após época 150  
-- Dice: Crescimento constante com pequenas flutuações  
-- Early Stopping: Bem configurado, evitou overfitting
+- **Loss:** Estável após época 150  
+- **Dice:** Crescimento constante com pequenas flutuações  
+- **Early Stopping:** Bem configurado, evitou overfitting
 
 ---
 
-### 3.3. Avaliação no Conjunto de Teste
+#### 3.3. Avaliação no Conjunto de Teste
 
-**Resultados principais no conjunto de teste:**  
-- Dice Score médio: 0.7608  
-- Desvio padrão: 0.0959  
+Resultados principais no conjunto de teste:  
+- **Dice Score médio:** 0,7608  
+- **Desvio padrão:** 0,0959  
 
 Esses valores indicam que, em média, o modelo consegue segmentar corretamente aproximadamente 76% dos voxels positivos, com certa variabilidade entre os volumes. O desvio padrão sugere que alguns volumes mais complexos apresentaram menor concordância com a máscara manual, provavelmente devido a variações anatômicas ou ruído de imagem.
 
 ---
 
-### 3.4. Avaliação Visual
+#### 3.4. Avaliação Visual
 
 Para complementar a análise quantitativa, a segmentação foi inspecionada visualmente em slices selecionados nos três planos anatômicos:  
 - **Plano Axial:** Permite observar a segmentação de estruturas em cortes transversais.  
 - **Plano Coronal:** Mostra a consistência das segmentações verticalmente.  
 - **Plano Sagital:** Permite análise lateral e simetria das estruturas segmentadas.
 
-#### 3.4.1. Imagem de boa qualidade – Feto Único
+##### 3.4.1. Imagem de boa qualidade – Feto Único
 
-Foram feitas inferências com vários casos parecidos em que o feto era único e a qualidade da imagem era boa. Um exemplo desses é o da **Figura 3.2**. Nestes casos, os volumes segmentados mostraram boa correspondência com a anatomia esperada. As regiões segmentadas correspondiam majoritariamente à estrutura de interesse, sem grandes falsos positivos em áreas não anatômicas. Essa avaliação qualitativa é importante e complementar ao Dice Score, pois métricas numéricas sozinhas não capturam erros estruturais sutis.
-
+Foram feitas inferências com vários casos parecidos em que o feto era único e a qualidade da imagem era boa. Um exemplo desses é o da **Figura 3.2** Nestes casos, os volumes segmentados mostraram boa correspondência com a anatomia esperada. As regiões segmentadas correspondiam majoritariamente à estrutura de interesse, sem grandes falsos positivos em áreas não anatômicas. Essa avaliação qualitativa é importante e complementar ao Dice Score, pois métricas numéricas sozinhas não capturam erros estruturais sutis.
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/faeb7cb9-07ab-49c4-a998-f6d6678d27ff" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/b49ea8b8-ac4c-4488-905c-9dce8565aa4e" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/d3557db3-f0b2-4995-b8a2-8d4481abe876" />
 **Figura 3.2:** Inferência de um feto único em imagem de boa qualidade: planos axial, coronal e sagital
 
-#### 3.4.2. Imagem de má qualidade – Feto Único
+##### 3.4.2. Imagem de má qualidade – Feto Único
 
-Foram feitas inferências com vários casos parecidos em que o feto era único e a qualidade da imagem não era boa, algumas pelo fato do feto ser pequeno (mais novo) e outras por conta da nitidez da imagem. Um exemplo desses é o da **Figura 3.3**. Em alguns desses casos, pequenas discrepâncias em algumas regiões foram observadas, especialmente em estruturas com baixa diferenciação de intensidade. Em alguns casos, também havia falsos positivos em regiões fora da área de interesse. Na visualização em 3D, é possível observar isso.
-
+Foram feitas inferências com vários casos parecidos em que o feto era único e a qualidade da imagem não era boa, algumas pelo fato do feto ser pequeno (mais novo) e outras por conta da nitidez da imagem. Um exemplo desses é o da **Figura 3.3** Em alguns desses casos, pequenas discrepâncias em algumas regiões foram observadas, especialmente em estruturas com baixa diferenciação de intensidade. Em alguns casos, também havia falsos positivos em regiões fora da área de interesse. Na visualização em 3D, é possível observar isso.
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/042d02ab-781f-4d82-a15e-71c7a8f9f7d5" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/ffefdeb9-d361-434c-b53f-d10ec7468228" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/88cc1d1f-5322-4a44-aa31-8d97bddf0b7c" />
+<img width="1489" height="495" alt="image" src="https://github.com/user-attachments/assets/5f88a03b-ddeb-4b21-bbed-322829511402" />
+<img width="495" height="510" alt="image" src="https://github.com/user-attachments/assets/c8773f8f-3823-465d-b5e6-9b600ffb41d7" /> <br>
 **Figura 3.3:** Inferência de um feto único em imagem de má qualidade: planos axial, coronal e sagital, distribuição das máscaras nos planos e visualização em 3D
 
-#### 3.4.3. Imagem Tremida – Feto Único
+##### 3.4.3. Imagem Tremida – Feto Único
 
 A **Figura 3.4** mostra a inferência em um caso em que o feto era único e a qualidade da imagem era boa, apesar de ser uma imagem tremida. Nestes caso, o volume segmentado mostrou boa correspondência com a anatomia esperada. As regiões segmentadas correspondiam majoritariamente à estrutura de interesse e o fato de a imagem estar tremida não prejudicou a criação da máscara.
-
+<img width="2377" height="410" alt="image" src="https://github.com/user-attachments/assets/e81736b3-2867-45c2-88fc-3ac56a4f1c5c" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/6f3b5717-2df0-4442-a354-4ddfb9764ff9" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/9308714a-7334-4f78-b0d1-de266ffb8f3c" /> <br>
 **Figura 3.4:** Inferência de um feto único em imagem tremida: planos axial, coronal e sagital
 
-#### 3.4.4. Gêmeos
+##### 3.4.4. Gêmeos
 
 Algumas regiões não foram identificadas no caso de gêmeos da **Figura 3.5**, geralmente um dos fetos não tem um lado dos pulmões identificado talvez pelo fato da qualidade da imagem do pulmão ser menor do que de um feto único (pulmão maior).
-
+<img width="2777" height="410" alt="image" src="https://github.com/user-attachments/assets/15c6b451-4130-4ac8-84c7-c1dc4912fb75" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/91d71f19-d74a-43a3-b13f-529c946e3de7" />
+<img width="2777" height="410" alt="image" src="https://github.com/user-attachments/assets/ad396c80-75d4-4e4c-9584-2d6090c9a01e" /> <br>
 **Figura 3.5:** Inferência de um caso de gêmeos: planos axial, coronal e sagital
 
-#### 3.4.5. Trigêmeos
+##### 3.4.5. Trigêmeos
 
 Em casos de trigêmeos, como o da **Figura 3.6**, geralmente um dos fetos não tem o pulmão identificado especialmente em estruturas com baixa diferenciação de intensidade porque a qualidade da imagem do pulmão é muito menor do que de um feto único (pulmão maior). É possível observar que o feto que aparece no eixo coronal, índice 28 não foi segmentado.
-
+<img width="2377" height="410" alt="image" src="https://github.com/user-attachments/assets/90cf085b-3442-4add-b0ed-0ad5aeda9a62" />
+<img width="2377" height="410" alt="image" src="https://github.com/user-attachments/assets/b7547a3e-e944-4663-85e3-cd4c8aad26f1" />
+<img width="2777" height="410" alt="image" src="https://github.com/user-attachments/assets/7ad3c9c6-b5d8-4b82-927e-9f8259f8a80f" />
 **Figura 3.6:** Inferência de um caso de trigêmeos: planos axial, coronal e sagital
 
-#### 3.4.6. Gêmeos Siameses
+##### 3.4.6. Gêmeos Siameses
 
-##### 3.4.6.1. Craniópagos
+###### 3.4.6.1. Craniópagos
 
 No caso de gêmeos siameses craniópagos mostrado na **Figura 3.7**, os pulmões foram segmentados da mesma forma que de gêmeos que não são siameses. Por conta dos pulmões serem menores do que o de um pulmão de uma gestação única faz com que, em alguns casos, a segmentação seja menos precisa e que haja regiões de falsos positivos. No entanto, o fato deles serem unidos pelo crânio não interferiu na segmentação.
-
+<img width="2777" height="410" alt="image" src="https://github.com/user-attachments/assets/0942289e-7262-4b87-9432-16392beef0bf" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/f82262f2-b543-4282-8aa6-185a5c4a11fb" />
+<img width="2377" height="410" alt="image" src="https://github.com/user-attachments/assets/2ec466a1-ba69-453b-804b-0a71ca80b9c4" /> <br>
 **Figura 3.7:** Inferência de um caso de gêmeos siameses craniópagos: planos axial, coronal e sagital
 
-##### 3.4.6.2. Toracópagos
+###### 3.4.6.2. Toracópagos
 
 No caso de gêmeos siameses toracópagos mostrado na **Figura 3.8**, os pulmões foram segmentados da mesma forma que de gêmeos que não são siameses. Por conta dos pulmões serem menores do que o de um pulmão de uma gestação única faz com que, em alguns casos, a segmentação seja menos precisa e que haja regiões de falsos positivos. No entanto, o fato deles serem unidos pelo tórax não interferiu na segmentação. Talvez, se forem unidos pelo pulmão, haja alguma diferença na segmentação porque neste caso, o pulmão teria um formato diferente do padrão que a rede aprendeu.
 
@@ -399,7 +410,7 @@ No caso de gêmeos siameses toracópagos mostrado na **Figura 3.8**, os pulmões
 
 ---
 
-### 3.5. Análise de Robustez
+#### 3.5. Análise de Robustez
 
 O modelo desenvolvido apresentou estabilidade nas últimas épocas de treinamento, evidenciada por pequenas flutuações nos valores do coeficiente de Dice obtidos durante a validação. Esse comportamento indica robustez e consistência no processo de aprendizado, refletindo a capacidade do modelo em manter o desempenho mesmo diante de variações sutis nas amostras de validação.  
 
@@ -413,7 +424,7 @@ De forma geral, o modelo demonstrou-se robusto para uso clínico padrão; contud
 
 ---
 
-### 3.6. Comparação com a Literatura
+#### 3.6. Comparação com a Literatura
 
 A literatura especializada em segmentação volumétrica tridimensional (3D) demonstra que os modelos fundadores, como a 3D U-Net e a V-Net, estabeleceram uma faixa de valores para o Coeficiente de Dice — métrica amplamente utilizada para avaliar a sobreposição entre as predições do modelo e as anotações de referência — geralmente entre 0,70 e 0,85 para órgãos sólidos, como fígado, rins e cérebro (Çiçek et al., 2016; Milletari et al., 2016). Estudos mais recentes indicam que arquiteturas baseadas na U-Net 3D, quando combinadas com mecanismos de atenção (*attention blocks*) ou estratégias de *ensemble*, podem alcançar desempenhos superiores, atingindo valores entre 0,88 e 0,90 de Dice Score. Contudo, esses ganhos de acurácia estão frequentemente associados a um aumento expressivo do custo computacional e da complexidade arquitetural (Isensee et al., 2021).  
 
@@ -421,7 +432,7 @@ No presente trabalho, o modelo desenvolvido obteve um Dice médio de 0,7608. Est
 
 ---
 
-### 3.7. Limitações
+#### 3.7. Limitações
 
 Apesar do bom desempenho obtido pelo modelo U-Net 3D, observou-se que a necessidade de reduzir a resolução das imagens durante o treinamento representou uma limitação relevante. Essa redução, necessária para adequar os volumes à capacidade de memória da GPU, resultou em perda de fidelidade espacial das máscaras segmentadas, que se apresentaram menores e deslocadas em relação às imagens originais. Além disso, durante o processo de reescala das máscaras para o tamanho original, ocorreu perda de detalhes anatômicos significativos.  
 
@@ -429,7 +440,7 @@ Ainda assim, o modelo demonstrou desempenho satisfatório e consistente, sendo c
 
 ---
 
-### 3.8. Cálculo de Volume com Fator de Escala
+#### 3.8. Cálculo de Volume com Fator de Escala
 
 A estimativa volumétrica das estruturas segmentadas foi realizada a partir das máscaras produzidas pelo modelo U-Net 3D. Entretanto, como o treinamento e a inferência foram conduzidos com volumes reduzidos (128 × 128 × 128 voxels), tornou-se necessário corrigir o volume final para o espaço físico original da imagem. Essa correção foi feita aplicando-se um fator de escala tridimensional, calculado a partir das diferenças entre as dimensões físicas do volume original e da versão reduzida.  
 
@@ -468,7 +479,7 @@ Proin feugiat nulla sem. Phasellus consequat tellus a ex aliquet, quis convallis
 
 ---
 
-Matrícula: 123.456.789
+Matrícula: 231.101.063
 
 Pontifícia Universidade Católica do Rio de Janeiro
 
@@ -477,6 +488,7 @@ Curso de Pós Graduação *Business Intelligence Master*
 
 
 </body>
+
 
 
 
