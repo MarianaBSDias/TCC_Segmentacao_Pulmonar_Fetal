@@ -31,13 +31,13 @@ Trabalho apresentado ao curso [BI MASTER](https://ica.puc-rio.ai/bi-master) como
 
 <!-- trocar o texto abaixo pelo resumo do trabalho, em português -->
 
-<p> &nbsp; &nbsp; &nbsp; &nbsp; Nos últimos anos, a análise de exames de imagens tridimensionais tornou-se um componente fundamental na prática clínica e na pesquisa biomédica. Exames como tomografia computadorizada (TC) e ressonância magnética (RM) geram volumes ricos em informação, que permitem avaliar órgãos, tecidos e estruturas complexas com alta precisão. Entretanto, a segmentação manual dessas imagens é uma tarefa extremamente demorada e pode apresentar inconsistências devido à qualidade variável das imagens. O advento das redes neurais convolucionais (CNNs) e, especificamente, da arquitetura U-Net 3D, revolucionou o campo de segmentação de imagens médicas, permitindo a análise direta em volumes completos enquanto preserva a continuidade anatômica das estruturas. </p>
+&nbsp; &nbsp; &nbsp; &nbsp; Nos últimos anos, a análise de exames de imagens tridimensionais tornou-se um componente fundamental na prática clínica e na pesquisa biomédica. Exames como tomografia computadorizada (TC) e ressonância magnética (RM) geram volumes ricos em informação, que permitem avaliar órgãos, tecidos e estruturas complexas com alta precisão. Entretanto, a segmentação manual dessas imagens é uma tarefa extremamente demorada e pode apresentar inconsistências devido à qualidade variável das imagens. O advento das redes neurais convolucionais (CNNs) e, especificamente, da arquitetura U-Net 3D, revolucionou o campo de segmentação de imagens médicas, permitindo a análise direta em volumes completos enquanto preserva a continuidade anatômica das estruturas.
 
-<p>  &nbsp; &nbsp; &nbsp; &nbsp; Este trabalho apresenta o desenvolvimento e avaliação de um sistema automatizado para segmentação pulmonar fetal em imagens de ressonância magnética 3D, utilizando a arquitetura U-Net 3D implementada no framework MONAI. O pipeline abrange desde o carregamento de dados NRRD até a geração de máscaras segmentadas, incluindo pré-processamento, normalização, reamostragem para voxel isotrópico de 1,5 mm³, redimensionamento para 128³ voxels e aumento de dados.  </p>
+&nbsp; &nbsp; &nbsp; &nbsp; Este trabalho apresenta o desenvolvimento e avaliação de um sistema automatizado para segmentação pulmonar fetal em imagens de ressonância magnética 3D, utilizando a arquitetura U-Net 3D implementada no *framework* MONAI. O *pipeline* abrange desde o carregamento de dados NRRD até a geração de máscaras segmentadas, incluindo pré-processamento, normalização, reamostragem para *voxel* isotrópico de 1,5 mm³, redimensionamento para 128³ *voxels* e aumento de dados.
 
-<p>  &nbsp; &nbsp; &nbsp; &nbsp; O modelo foi treinado em GPU NVIDIA com monitoramento do coeficiente de Dice e função de perda combinada (Dice + Cross Entropy), alcançando 0,7608 no conjunto de teste — resultado considerado clinicamente relevante. O uso da técnica de janela deslizante (sliding window) permitiu processar volumes completos mantendo consistência espacial.  </p>
+&nbsp; &nbsp; &nbsp; &nbsp; O modelo foi treinado em GPU NVIDIA com monitoramento do coeficiente de *Dice* e função de perda combinada (*Dice* + *Cross Entropy*), alcançando 0,7608 no conjunto de teste — resultado considerado clinicamente relevante. O uso da técnica de janela deslizante (*sliding window*) permitiu processar volumes completos mantendo consistência espacial.
 
-<p>  &nbsp; &nbsp; &nbsp; &nbsp; Apesar do bom desempenho, a necessidade de reduzir a resolução das imagens para o treinamento limitou a fidelidade das máscaras e causou perda de detalhes na tentativa de reescalar as máscaras. Mesmo assim, foi possível obter estimativas volumétricas úteis aplicando fator de escala. Como trabalho futuro, planeja-se treinar o modelo em resolução original com hardware mais potente, a fim de aumentar a precisão, utilização das máscaras e preservar a riqueza de detalhes para aplicações clínicas e de pesquisa.  </p>
+&nbsp; &nbsp; &nbsp; &nbsp; Apesar do bom desempenho, a necessidade de reduzir a resolução das imagens para o treinamento limitou a fidelidade das máscaras e causou perda de detalhes na tentativa de reescalar as máscaras. Mesmo assim, foi possível obter estimativas volumétricas úteis aplicando fator de escala. Como trabalho futuro, planeja-se treinar o modelo em resolução original com *hardware* mais potente, a fim de aumentar a precisão, utilização das máscaras e preservar a riqueza de detalhes para aplicações clínicas e de pesquisa.
 
 <h4>Palavras-chave</h4>
 <p>Segmentação Automática, Ressonância Magnética Fetal, U-Net 3D, MONAI, Deep Learning, Processamento de Imagens Médicas, Pulmão Fetal.<span class="mark"></span></p>
@@ -541,6 +541,7 @@ Curso de Pós Graduação *Business Intelligence Master*
 
 
 </body>
+
 
 
 
