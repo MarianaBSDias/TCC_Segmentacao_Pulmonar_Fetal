@@ -405,7 +405,9 @@ No caso de gêmeos siameses craniópagos mostrado na **Figura 3.7**, os pulmões
 ###### 3.4.6.2. Toracópagos
 
 No caso de gêmeos siameses toracópagos mostrado na **Figura 3.8**, os pulmões foram segmentados da mesma forma que de gêmeos que não são siameses. Por conta dos pulmões serem menores do que o de um pulmão de uma gestação única faz com que, em alguns casos, a segmentação seja menos precisa e que haja regiões de falsos positivos. No entanto, o fato deles serem unidos pelo tórax não interferiu na segmentação. Talvez, se forem unidos pelo pulmão, haja alguma diferença na segmentação porque neste caso, o pulmão teria um formato diferente do padrão que a rede aprendeu.
-
+<img width="2777" height="410" alt="image" src="https://github.com/user-attachments/assets/ead8eb28-6c84-4fd7-9649-9b65cc0b4f5d" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/5fd108b2-9fec-484b-bf3b-7636ffb479b7" />
+<img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/f080f266-47ce-4a93-8e7b-8c52c54737f2" />
 **Figura 3.8:** Inferência de um caso de gêmeos siameses toracópagos: planos axial, coronal e sagital
 
 ---
@@ -426,7 +428,7 @@ De forma geral, o modelo demonstrou-se robusto para uso clínico padrão; contud
 
 #### 3.6. Comparação com a Literatura
 
-A literatura especializada em segmentação volumétrica tridimensional (3D) demonstra que os modelos fundadores, como a 3D U-Net e a V-Net, estabeleceram uma faixa de valores para o Coeficiente de Dice — métrica amplamente utilizada para avaliar a sobreposição entre as predições do modelo e as anotações de referência — geralmente entre 0,70 e 0,85 para órgãos sólidos, como fígado, rins e cérebro (Çiçek et al., 2016; Milletari et al., 2016). Estudos mais recentes indicam que arquiteturas baseadas na U-Net 3D, quando combinadas com mecanismos de atenção (*attention blocks*) ou estratégias de *ensemble*, podem alcançar desempenhos superiores, atingindo valores entre 0,88 e 0,90 de Dice Score. Contudo, esses ganhos de acurácia estão frequentemente associados a um aumento expressivo do custo computacional e da complexidade arquitetural (Isensee et al., 2021).  
+A literatura especializada em segmentação volumétrica tridimensional (3D) demonstra que os modelos fundadores, como a 3D U-Net e a V-Net, estabeleceram uma faixa de valores para o Coeficiente de Dice — métrica amplamente utilizada para avaliar a sobreposição entre as predições do modelo e as anotações de referência — geralmente entre 0,70 e 0,85 para órgãos sólidos, como fígado, rins e cérebro (Çiçek *et al*., 2016; Milletari *et al*., 2016). Estudos mais recentes indicam que arquiteturas baseadas na U-Net 3D, quando combinadas com mecanismos de atenção (*attention blocks*) ou estratégias de ensemble, podem alcançar desempenhos superiores, atingindo valores entre 0,88 e 0,90 de Dice Score. Contudo, esses ganhos de acurácia estão frequentemente associados a um aumento expressivo do custo computacional e da complexidade arquitetural (Isensee *et al*., 2021).
 
 No presente trabalho, o modelo desenvolvido obteve um Dice médio de 0,7608. Este valor se situa dentro da faixa reportada para as arquiteturas 3D fundadoras, confirmando a competitividade dos resultados face a modelos de referência, mesmo sem a incorporação de técnicas adicionais complexas. Ademais, o modelo proposto mantém uma estrutura arquitetural simples e eficiente, o que favorece sua integração em pipelines clínicos e aplicações que demandam baixo custo computacional e facilidade de implementação.
 
@@ -434,7 +436,7 @@ No presente trabalho, o modelo desenvolvido obteve um Dice médio de 0,7608. Est
 
 #### 3.7. Limitações
 
-Apesar do bom desempenho obtido pelo modelo U-Net 3D, observou-se que a necessidade de reduzir a resolução das imagens durante o treinamento representou uma limitação relevante. Essa redução, necessária para adequar os volumes à capacidade de memória da GPU, resultou em perda de fidelidade espacial das máscaras segmentadas, que se apresentaram menores e deslocadas em relação às imagens originais. Além disso, durante o processo de reescala das máscaras para o tamanho original, ocorreu perda de detalhes anatômicos significativos.  
+Apesar do bom desempenho obtido pelo modelo U-Net 3D, observou-se que a necessidade de reduzir a resolução das imagens durante o treinamento representou uma limitação relevante. Essa redução, necessária para adequar os volumes à capacidade de memória da GPU, resultou em perda de fidelidade espacial das máscaras segmentadas, que se apresentaram menores e deslocadas em relação às imagens originais. Além disso, durante o processo de reescala das máscaras para o tamanho original, ocorreu perda de detalhes anatômicos significativos.
 
 Ainda assim, o modelo demonstrou desempenho satisfatório e consistente, sendo capaz de produzir estimativas volumétricas clinicamente úteis por meio da aplicação de fatores de escala que compensam a redução de resolução. Dessa forma, os resultados indicam que, mesmo diante de limitações de hardware e compromissos entre resolução e viabilidade computacional, é possível alcançar resultados quantitativos confiáveis e reproduzíveis com relação a cálculo de volume.
 
@@ -488,6 +490,7 @@ Curso de Pós Graduação *Business Intelligence Master*
 
 
 </body>
+
 
 
 
