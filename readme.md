@@ -40,7 +40,8 @@ Trabalho apresentado ao curso [BI MASTER](https://ica.puc-rio.ai/bi-master) como
 &nbsp; &nbsp; &nbsp; &nbsp; Apesar do bom desempenho, a necessidade de reduzir a resolução das imagens para o treinamento limitou a fidelidade das máscaras e causou perda de detalhes na tentativa de reescalar as máscaras. Mesmo assim, foi possível obter estimativas volumétricas úteis aplicando fator de escala. Como trabalho futuro, planeja-se treinar o modelo em resolução original com *hardware* mais potente, a fim de aumentar a precisão, utilização das máscaras e preservar a riqueza de detalhes para aplicações clínicas e de pesquisa.
 
 <h4>Palavras-chave</h4>
-<p>Segmentação Automática, Ressonância Magnética Fetal, U-Net 3D, MONAI, Deep Learning, Processamento de Imagens Médicas, Pulmão Fetal.<span class="mark"></span></p>
+
+Segmentação Automática, Ressonância Magnética Fetal, U-Net 3D, MONAI, *Deep Learning*, Processamento de Imagens Médicas, Pulmão Fetal.
 
 ---
 
@@ -69,13 +70,13 @@ Este trabalho de conclusão de curso (TCC) visa explorar, implementar e avaliar 
 
 Os objetivos específicos deste estudo incluem:
 
-1.	Implementar um pipeline de pré-processamento adequado para imagens médicas 3D, garantindo consistência espacial e intensidade padronizada.
+1.	Implementar um *pipeline* de pré-processamento adequado para imagens médicas 3D, garantindo consistência espacial e intensidade padronizada.
 
 2.	Treinar uma U-Net 3D adaptada para segmentação de uma estrutura específica em volumes volumétricos, utilizando técnicas de monitoramento de desempenho e salvamento do melhor modelo.
 
-3.	Avaliar quantitativamente o desempenho do modelo em um conjunto de teste independente, calculando métricas como Dice e desvio padrão.
+3.	Avaliar quantitativamente o desempenho do modelo em um conjunto de teste independente, calculando métricas como *Dice* e desvio padrão.
 
-4.	Realizar inferência em novas imagens, aplicando técnicas de sliding window e pós-processamento para obtenção de máscaras binárias consistentes.
+4.	Realizar inferência em novas imagens, aplicando técnicas de *sliding window* e pós-processamento para obtenção de máscaras binárias consistentes.
 
 5.	Discutir os resultados, limitações e potenciais aplicações clínicas ou de pesquisa.
 
@@ -85,7 +86,7 @@ Os objetivos específicos deste estudo incluem:
 
 #### Arquitetura Geral do Sistema
 
-O sistema implementa um **pipeline completo de processamento**:
+O sistema implementa um ***pipeline* completo de processamento**:
 
 **Aquisição de Ressonância Magnética (RM)** → **Pré-processamento** → **Aumento de Dados** → **Treinamento da U-Net 3D** → **Validação** → **Inferência**
 
@@ -95,7 +96,7 @@ O sistema implementa um **pipeline completo de processamento**:
 
 A base de dados utilizada neste estudo consiste em **imagens médicas volumétricas** no formato **NRRD** (*Nearly Raw Raster Data*), amplamente utilizado para armazenar dados tridimensionais de tomografia computadorizada (CT) e ressonância magnética (MRI).  
 
-O formato NRRD é vantajoso por manter **metadados essenciais**, como espaçamento de voxels, orientação e dimensões originais, garantindo consistência no pré-processamento.
+O formato NRRD é vantajoso por manter **metadados essenciais**, como espaçamento de *voxels*, orientação e dimensões originais, garantindo consistência no pré-processamento.
 
 **Características do dataset:**
 - **Total de volumes:** 342 exames  
@@ -131,7 +132,7 @@ A escolha desse dataset permitiu avaliar o desempenho do modelo em volumes compl
 
 **Formato NRRD:** padrão em neuroimagem, com suporte a metadados ricos.  
 **Metadados incluídos:**
-- Espaçamento de voxel (dimensões físicas)  
+- Espaçamento de *voxel* (dimensões físicas)  
 - Orientação anatômica  
 - Tipo de dados e codificação  
 
@@ -141,7 +142,7 @@ A escolha desse dataset permitiu avaliar o desempenho do modelo em volumes compl
 
 ---
 
-#### 2.2. Hardware e Software
+#### 2.2. *Hardware* e *Software*
 
 O treinamento e a inferência foram realizados em ambiente **GPU CUDA**, utilizando:
 
@@ -159,7 +160,7 @@ A escolha do MONAI se deve à sua integração nativa com o PyTorch, oferecendo 
 
 O pré-processamento é uma etapa crítica para padronizar volumes de diferentes exames, reduzir variabilidade e preparar os dados para a U-Net 3D (Kondrateva *et al*., 2022). As etapas realizadas foram:
 
-1. **Carregamento do volume (LoadImaged):** arquivos NRRD foram convertidos em tensores PyTorch. Este passo assegura que os dados possam ser manipulados de forma eficiente em pipelines de aprendizado profundo. <br>
+1. **Carregamento do volume (LoadImaged):** arquivos NRRD foram convertidos em tensores PyTorch. Este passo assegura que os dados possam ser manipulados de forma eficiente em *pipelines* de aprendizado profundo. <br>
 Considerações técnicas: <br>
    - Mantém dimensões originais.  
    - Permite leitura de metadados como *spacing* e orientação.
@@ -176,14 +177,14 @@ Considerações técnicas: <br>
    - Seja robusto a variações de intensidade entre scanners;
    - Aprenda padrões anatômicos sem viés de intensidade absoluta.
   
-6. **Redimensionamento (ResizeD):** volumes ajustados para `128 × 128 × 128` voxels, equilibrando detalhes anatômicos e limitações de memória GPU. Permite treinamento em GPU comum. Isso foi feito para permitir treinamento em GPU comum e reduzir o tempo computacional de inferência.
+6. **Redimensionamento (ResizeD):** volumes ajustados para `128 × 128 × 128` *voxels*, equilibrando detalhes anatômicos e limitações de memória GPU. Permite treinamento em GPU comum. Isso foi feito para permitir treinamento em GPU comum e reduzir o tempo computacional de inferência.
  
 7. **Conversão final para tensor (EnsureTyped):** compatível com MONAI para treinamento e inferência, garantindo integração com *DataLoaders*, *pipelines* e funções de *loss*.
 
 **Tabela 2.1 — Resumo do Pré-Processamento:**  
 <img width="767" height="209" alt="image" src="https://github.com/user-attachments/assets/d6d7fc77-624c-4f9f-b191-3a3090de644a" />
 
-Após essas transformações, todos os volumes apresentaram shape uniforme, pronto para entrada no modelo.
+Após essas transformações, todos os volumes apresentaram *shape* uniforme, pronto para entrada no modelo.
 
 ---
 
@@ -211,21 +212,21 @@ Para aumentar a robustez do modelo e prevenir sobreajuste (*overfitting*), são 
 
 O modelo U-Net 3D foi implementado por meio do módulo monai.networks.nets.UNet da biblioteca MONAI. A definição dos parâmetros arquiteturais considerou a resolução dos volumes de entrada, a capacidade de memória da GPU e a complexidade anatômica da estrutura de interesse.
 
-O modelo foi inicializado com pesos aleatórios e treinado do zero, utilizando monitoramento contínuo da métrica Dice no conjunto de validação. O melhor modelo foi automaticamente salvo com base no maior valor de Dice alcançado, garantindo que o resultado final representasse o estado de treinamento de maior desempenho.
+O modelo foi inicializado com pesos aleatórios e treinado do zero, utilizando monitoramento contínuo da métrica *Dice* no conjunto de validação. O melhor modelo foi automaticamente salvo com base no maior valor de *Dice* alcançado, garantindo que o resultado final representasse o estado de treinamento de maior desempenho.
 
 A U-Net 3D implementada segue a estrutura clássica proposta por Ronneberger *et al*. (2015), com adaptações para o processamento de imagens volumétricas tridimensionais. Suas principais configurações são:
 
 
 - **Entrada:** volume tridimensional `(C, D, H, W)`, com `C = 1`, representando imagens em escala de cinza; 
 - **Saída:** máscara binária tridimensional com `C = 1`, correspondente à estrutura segmentada; 
-- **Filtros por nível do encoder:** `(8, 16, 32, 64)`, aumentando progressivamente conforme a profundidade da rede; 
+- **Filtros por nível do *encoder*:** `(8, 16, 32, 64)`, aumentando progressivamente conforme a profundidade da rede; 
 - **Strides (*downsampling*):** `(2, 2, 2)`, utilizados para redução sistemática da dimensionalidade espacial;  
 - **Conexões de salto (*skip connections*):** preservam detalhes anatômicos aprendidos nas camadas iniciais;
 - **Blocos residuais:** uma por nível, empregadas para evitar a degradação do gradiente e permitir aprendizado mais profundo;
 - **Normalização em lote (*Batch Normalization*) e função de ativação ReLU:** aplicadas em todas as camadas, a fim de estabilizar o treinamento e acelerar a convergência. 
 
 A arquitetura compreende três **componentes principais:**
-1. sua estrutura em formato de “U”, que possibilita o contexto global de cada voxel dentro do volume;
+1. sua estrutura em formato de “U”, que possibilita o contexto global de cada *voxel* dentro do volume;
 2. o uso de convoluções tridimensionais (3D), que mantêm as relações espaciais entre fatias e capturam a coerência anatômica;
 3. e as conexões de salto, essenciais para a segmentação precisa de órgãos pequenos ou estruturas de baixo contraste.
 
@@ -237,7 +238,7 @@ Essa configuração arquitetural permite ao modelo capturar informações volum�
 
 O treinamento do modelo U-Net 3D foi conduzido considerando princípios voltados à eficiência do aprendizado e à robustez na generalização dos resultados. O processo contemplou 450 épocas de treinamento, com execução preferencial em GPU (CUDA), explorando a aceleração computacional oferecida pelo processamento paralelo em unidades gráficas. Quando a GPU não estava disponível, o treinamento foi automaticamente realizado em CPU, assegurando compatibilidade e portabilidade do modelo entre diferentes ambientes computacionais.
 
-O pipeline de dados seguiu o pré-processamento descrito na Seção 2.3, no qual cada volume foi padronizado para espaçamento isotrópico, orientação RAS (*Right–Anterior–Superior*) e escala de intensidade normalizada. Essa uniformização foi fundamental para reduzir discrepâncias entre exames provenientes de diferentes protocolos de aquisição, favorecendo a consistência dos dados e a eficiência do aprendizado da rede.
+O *pipeline* de dados seguiu o pré-processamento descrito na Seção 2.3, no qual cada volume foi padronizado para espaçamento isotrópico, orientação RAS (*Right–Anterior–Superior*) e escala de intensidade normalizada. Essa uniformização foi fundamental para reduzir discrepâncias entre exames provenientes de diferentes protocolos de aquisição, favorecendo a consistência dos dados e a eficiência do aprendizado da rede.
 
 Devido ao elevado consumo de memória associado ao processamento de volumes tridimensionais, foi adotado *batch size* igual a 1, permitindo o treinamento com volumes completos sem prejuízo à integridade das informações espaciais.
 
@@ -254,18 +255,18 @@ Durante o treinamento, a **métrica *Dice*** foi monitorada a cada época no con
 A inferência em novos volumes seguiu os mesmos passos de pré-processamento aplicados ao treino.
 
 1. **Carregamento do Volume:** arquivo NRRD lido com `nrrd` e processado pelos mesmos *transforms* do treinamento, garantindo consistência.  
-2. **Adição de dimensão de batch:** tensor com shape `(1, 1, D, H, W)` para compatibilidade com o modelo 3D.  
-3. **Sliding Window Inference:** Necessário para processar volumes grandes que não cabem na memória GPU de uma só vez.  
+2. **Adição de dimensão de *batch*:** tensor com *shape* `(1, 1, D, H, W)` para compatibilidade com o modelo 3D.  
+3. ***Sliding Window Inference:*** Necessário para processar volumes grandes que não cabem na memória GPU de uma só vez.  
    - **Tamanho da janela:** `(96, 96, 96)`  
    - **Sobreposição:** `25%`  
-   - **Batch size:** `1`  
-4. **Aplicação de sigmoid:** converteu *logits* da saída em probabilidades entre 0 e 1.  
-5. **Threshold de 0.5:** para binarização da máscara predita.  
+   - ***Batch size*:** `1`  
+4. **Aplicação de *sigmoid*:** converteu *logits* da saída em probabilidades entre 0 e 1.  
+5. ***Threshold* de 0.5:** para binarização da máscara predita.  
 6. **Resultados:**  
-   - **Shape da máscara predita:** `(128, 128, 128)`  
-   - **Percentual de voxels positivos:** depende do volume, mas o pipeline permite análise quantitativa do volume segmentado.  
-   - **Dice Score médio (teste):** `0.7608`  
-   - **Desvio padrão do Dice:** `0.0959`
+   - ***Shape* da máscara predita:** `(128, 128, 128)`  
+   - **Percentual de *voxels* positivos:** depende do volume, mas o *pipeline* permite análise quantitativa do volume segmentado.  
+   - ***Dice Score* médio (teste):** `0.7608`  
+   - **Desvio padrão do *Dice*:** `0.0959`
 
 ---
 
@@ -291,15 +292,15 @@ onde:
 - $p_i$: valor predito pelo modelo (probabilidade de pertencimento à classe "pulmão")  
 - $g_i$: *Ground Truth* no *pixel* ou *voxel* $$i$$, ou seja, o rótulo real da imagem de segmentação. Valor real (0 ou 1), sendo **1**, se o *pixel* $$i$$ pertence à classe "pulmão" e **0**, caso contrário.
 
-Conforme destacado por Zou *et al*. (2004), o DSC (*Dice Similarity Coefficient* ou seja, Coeficiente de Similaridade de Dice) é uma medida resumo simples e útil de sobreposição espacial, que pode ser aplicada a estudos de reprodutibilidade e precisão na segmentação de imagens.  
+Conforme destacado por Zou *et al*. (2004), o DSC (*Dice Similarity Coefficient* ou seja, Coeficiente de Similaridade de *Dice*) é uma medida resumo simples e útil de sobreposição espacial, que pode ser aplicada a estudos de reprodutibilidade e precisão na segmentação de imagens.  
 
-A **DICE Loss** geralmente é definida como:
+A **DICE *Loss*** geralmente é definida como:
 
 $$
 DICE\ Loss = 1 - DICE
 $$
 
-Essa métrica é particularmente adequada para dados desbalanceados, onde a classe de interesse (neste trabalho, pulmão fetal) ocupa uma pequena fração da imagem, pois maximiza diretamente a sobreposição entre a predição e a máscara real. Milletari *et al*. (2016) propuseram uma função de perda baseada no coeficiente de *Dice* para lidar com situações em que há um forte desequilíbrio entre o número de voxels do primeiro plano e do fundo, evitando a necessidade de reamostragem ou ponderação explícita.
+Essa métrica é particularmente adequada para dados desbalanceados, onde a classe de interesse (neste trabalho, pulmão fetal) ocupa uma pequena fração da imagem, pois maximiza diretamente a sobreposição entre a predição e a máscara real. Milletari *et al*. (2016) propuseram uma função de perda baseada no coeficiente de *Dice* para lidar com situações em que há um forte desequilíbrio entre o número de *voxels* do primeiro plano e do fundo, evitando a necessidade de reamostragem ou ponderação explícita.
 
 ---
 
@@ -309,20 +310,20 @@ O processo de treinamento da arquitetura U-Net 3D demonstrou uma evolução cons
 <img width="1189" height="390" alt="image" src="https://github.com/user-attachments/assets/6df85009-3e11-4517-ab07-efbf02b938fa" />
 
 
-**Figura 3.1:** Curvas de aprendizado: Loss de treinamento e Dice na validação  
+**Figura 3.1:** Curvas de aprendizado: *Loss* de treinamento e *Dice* na validação  
 
-**Loss de Treino:**  
+***Loss* de Treino:**  
 - **Épocas 1 – 50:** Redução rápida de 1,8124 → ~0,6  
 - **Épocas 50 – 150:** Estabilização entre 0,5 – 0,7  
 - **Épocas 150 – 450:** Flutuação suave entre 0,4 – 0,6  
-- **Final (Época 450):** Loss = 0,5123  
+- **Final (Época 450):** *Loss* = 0,5123  
 
-**Dice Score de Validação:**  
+***Dice Score* de Validação:**  
 - **Épocas 1 – 50:** Crescimento rápido de 0.0043 → ~0,6  
 - **Épocas 50 – 200:** Melhora consistente até ~0,75  
 - **Épocas 200 – 450:** Estabilização com picos até 0,85 +  
-- **Melhor época:** Época 377 com Dice = 0,8723  
-- **Final (Época 450):** Dice = 0,8614  
+- **Melhor época:** Época 377 com *Dice* = 0,8723  
+- **Final (Época 450):** *Dice* = 0,8614  
 
 **Marcos Importantes do Treinamento:**  
 📅 **Época 001:** Loss = 1,8124 | Dice Val = 0,0043 ✅  
@@ -337,9 +338,9 @@ O processo de treinamento da arquitetura U-Net 3D demonstrou uma evolução cons
 📅 **Época 400:** Loss = 0,4289 | Dice Val = 0,8567  
 📅 **Época 450:** Loss = 0,5123 | Dice Val = 0,8614  
 
-**Early Stopping:**  
-- **Patience:** 50 épocas  
-- **Ativado na época:** ~427 (após melhor Dice na época 377)  
+***Early Stopping:***  
+- ***Patience:*** 50 épocas  
+- **Ativado na época:** ~427 (após melhor *Dice* na época 377)  
 - **Total de épocas efetivas:** 427  
 - **Modelo final salvo:** Época 377  
 
@@ -347,35 +348,35 @@ O processo de treinamento da arquitetura U-Net 3D demonstrou uma evolução cons
 - **Fase Inicial (Épocas 1 – 50):** Aprendizado rápido  
 - **Fase de Consolidação (Épocas 50 – 200):** Melhora consistente  
 - **Fase de Refinamento (Épocas 200 – 377):** Otimização fina  
-- **Fase de Saturação (Épocas 377 – 427):** Plateau com flutuações  
+- **Fase de Saturação (Épocas 377 – 427):** *Plateau* com flutuações  
 
 **Estabilidade do Treinamento:**  
-- **Loss:** Estável após época 150  
-- **Dice:** Crescimento constante com pequenas flutuações  
-- **Early Stopping:** Bem configurado, evitou overfitting
+- ***Loss:*** Estável após época 150  
+- ***Dice*:** Crescimento constante com pequenas flutuações  
+- ***Early Stopping*:** Bem configurado, evitou *overfitting*
 
 ---
 
 #### 3.3. Avaliação no Conjunto de Teste
 
 Resultados principais no conjunto de teste:  
-- **Dice Score médio:** 0,7608  
+- ***Dice Score* médio:** 0,7608  
 - **Desvio padrão:** 0,0959  
 
-Esses valores indicam que, em média, o modelo consegue segmentar corretamente aproximadamente 76% dos voxels positivos, com certa variabilidade entre os volumes. O desvio padrão sugere que alguns volumes mais complexos apresentaram menor concordância com a máscara manual, provavelmente devido a variações anatômicas ou ruído de imagem.
+Esses valores indicam que, em média, o modelo consegue segmentar corretamente aproximadamente 76% dos *voxels* positivos, com certa variabilidade entre os volumes. O desvio padrão sugere que alguns volumes mais complexos apresentaram menor concordância com a máscara manual, provavelmente devido a variações anatômicas ou ruído de imagem.
 
 ---
 
 #### 3.4. Avaliação Visual
 
-Para complementar a análise quantitativa, a segmentação foi inspecionada visualmente em slices selecionados nos três planos anatômicos:  
+Para complementar a análise quantitativa, a segmentação foi inspecionada visualmente em *slices* selecionados nos três planos anatômicos:  
 - **Plano Axial:** Permite observar a segmentação de estruturas em cortes transversais.  
 - **Plano Coronal:** Mostra a consistência das segmentações verticalmente.  
 - **Plano Sagital:** Permite análise lateral e simetria das estruturas segmentadas.
 
 ##### 3.4.1. Imagem de boa qualidade – Feto Único
 
-Foram feitas inferências com vários casos parecidos em que o feto era único e a qualidade da imagem era boa. Um exemplo desses é o da **Figura 3.2** Nestes casos, os volumes segmentados mostraram boa correspondência com a anatomia esperada. As regiões segmentadas correspondiam majoritariamente à estrutura de interesse, sem grandes falsos positivos em áreas não anatômicas. Essa avaliação qualitativa é importante e complementar ao Dice Score, pois métricas numéricas sozinhas não capturam erros estruturais sutis.
+Foram feitas inferências com vários casos parecidos em que o feto era único e a qualidade da imagem era boa. Um exemplo desses é o da **Figura 3.2** Nestes casos, os volumes segmentados mostraram boa correspondência com a anatomia esperada. As regiões segmentadas correspondiam majoritariamente à estrutura de interesse, sem grandes falsos positivos em áreas não anatômicas. Essa avaliação qualitativa é importante e complementar ao *Dice Score*, pois métricas numéricas sozinhas não capturam erros estruturais sutis.
 <img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/faeb7cb9-07ab-49c4-a998-f6d6678d27ff" />
 <img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/b49ea8b8-ac4c-4488-905c-9dce8565aa4e" />
 <img width="1978" height="410" alt="image" src="https://github.com/user-attachments/assets/d3557db3-f0b2-4995-b8a2-8d4481abe876" />
@@ -437,13 +438,13 @@ No caso de gêmeos siameses toracópagos mostrado na **Figura 3.8**, os pulmões
 
 #### 3.5. Análise de Robustez
 
-O modelo desenvolvido apresentou estabilidade nas últimas épocas de treinamento, evidenciada por pequenas flutuações nos valores do coeficiente de Dice obtidos durante a validação. Esse comportamento indica robustez e consistência no processo de aprendizado, refletindo a capacidade do modelo em manter o desempenho mesmo diante de variações sutis nas amostras de validação.  
+O modelo desenvolvido apresentou estabilidade nas últimas épocas de treinamento, evidenciada por pequenas flutuações nos valores do coeficiente de *Dice* obtidos durante a validação. Esse comportamento indica robustez e consistência no processo de aprendizado, refletindo a capacidade do modelo em manter o desempenho mesmo diante de variações sutis nas amostras de validação.  
 
 A estabilidade observada pode ser atribuída à normalização das intensidades e à padronização do espaçamento e da orientação (*spacing* e *orientation*) dos volumes, etapas que reduziram significativamente a influência de diferenças entre protocolos de aquisição e configurações de scanner. Esses procedimentos contribuíram para a robustez a variações de intensidade e aprimoraram a generalização do modelo.  
 
-Nos conjuntos de teste, compostos por dados não utilizados nas fases de treinamento e validação, o modelo apresentou valores médios de Dice consistentes, o que reforça sua capacidade de generalização e confiabilidade para aplicações práticas.  
+Nos conjuntos de teste, compostos por dados não utilizados nas fases de treinamento e validação, o modelo apresentou valores médios de *Dice* consistentes, o que reforça sua capacidade de generalização e confiabilidade para aplicações práticas.  
 
-Entretanto, observou-se que alguns volumes específicos apresentaram valores de Dice inferiores a 0,65. Essa queda de desempenho pode estar relacionada a estruturas anatômicas de pequeno porte ou mal definidas, à presença de artefatos de aquisição no exame original, ou ainda a inconsistências na segmentação manual de referência (*ground truth*) — um processo subjetivo e suscetível a variações entre especialistas.  
+Entretanto, observou-se que alguns volumes específicos apresentaram valores de *Dice* inferiores a 0,65. Essa queda de desempenho pode estar relacionada a estruturas anatômicas de pequeno porte ou mal definidas, à presença de artefatos de aquisição no exame original, ou ainda a inconsistências na segmentação manual de referência (*ground truth*) — um processo subjetivo e suscetível a variações entre especialistas.  
 
 De forma geral, o modelo demonstrou-se robusto para uso clínico padrão; contudo, exames de baixa qualidade ou contendo artefatos significativos podem demandar inspeção adicional antes da utilização dos resultados. Estratégias complementares, como o pós-processamento morfológico e o treinamento com técnicas de *data augmentation* específicas para ruído e artefatos, podem contribuir para reduzir a sensibilidade do modelo a essas variações e melhorar sua confiabilidade em cenários desafiadores.
 
@@ -451,9 +452,9 @@ De forma geral, o modelo demonstrou-se robusto para uso clínico padrão; contud
 
 #### 3.6. Comparação com a Literatura
 
-A literatura especializada em segmentação volumétrica tridimensional (3D) demonstra que os modelos fundadores, como a 3D U-Net e a V-Net, estabeleceram uma faixa de valores para o Coeficiente de Dice — métrica amplamente utilizada para avaliar a sobreposição entre as predições do modelo e as anotações de referência — geralmente entre 0,70 e 0,85 para órgãos sólidos, como fígado, rins e cérebro (Çiçek *et al*., 2016; Milletari *et al*., 2016). Estudos mais recentes indicam que arquiteturas baseadas na U-Net 3D, quando combinadas com mecanismos de atenção (*attention blocks*) ou estratégias de ensemble, podem alcançar desempenhos superiores, atingindo valores entre 0,88 e 0,90 de Dice Score. Contudo, esses ganhos de acurácia estão frequentemente associados a um aumento expressivo do custo computacional e da complexidade arquitetural (Isensee *et al*., 2021).
+A literatura especializada em segmentação volumétrica tridimensional (3D) demonstra que os modelos fundadores, como a 3D U-Net e a V-Net, estabeleceram uma faixa de valores para o Coeficiente de *Dice* — métrica amplamente utilizada para avaliar a sobreposição entre as predições do modelo e as anotações de referência — geralmente entre 0,70 e 0,85 para órgãos sólidos, como fígado, rins e cérebro (Çiçek *et al*., 2016; Milletari *et al*., 2016). Estudos mais recentes indicam que arquiteturas baseadas na U-Net 3D, quando combinadas com mecanismos de atenção (*attention blocks*) ou estratégias de ensemble, podem alcançar desempenhos superiores, atingindo valores entre 0,88 e 0,90 de *Dice Score*. Contudo, esses ganhos de acurácia estão frequentemente associados a um aumento expressivo do custo computacional e da complexidade arquitetural (Isensee *et al*., 2021).
 
-No presente trabalho, o modelo desenvolvido obteve um Dice médio de 0,7608. Este valor se situa dentro da faixa reportada para as arquiteturas 3D fundadoras, confirmando a competitividade dos resultados face a modelos de referência, mesmo sem a incorporação de técnicas adicionais complexas. Ademais, o modelo proposto mantém uma estrutura arquitetural simples e eficiente, o que favorece sua integração em pipelines clínicos e aplicações que demandam baixo custo computacional e facilidade de implementação.
+No presente trabalho, o modelo desenvolvido obteve um *Dice* médio de 0,7608. Este valor se situa dentro da faixa reportada para as arquiteturas 3D fundadoras, confirmando a competitividade dos resultados face a modelos de referência, mesmo sem a incorporação de técnicas adicionais complexas. Ademais, o modelo proposto mantém uma estrutura arquitetural simples e eficiente, o que favorece sua integração em pipelines clínicos e aplicações que demandam baixo custo computacional e facilidade de implementação.
 
 ---
 
@@ -461,17 +462,17 @@ No presente trabalho, o modelo desenvolvido obteve um Dice médio de 0,7608. Est
 
 Apesar do bom desempenho obtido pelo modelo U-Net 3D, observou-se que a necessidade de reduzir a resolução das imagens durante o treinamento representou uma limitação relevante. Essa redução, necessária para adequar os volumes à capacidade de memória da GPU, resultou em perda de fidelidade espacial das máscaras segmentadas, que se apresentaram menores e deslocadas em relação às imagens originais. Além disso, durante o processo de reescala das máscaras para o tamanho original, ocorreu perda de detalhes anatômicos significativos.
 
-Ainda assim, o modelo demonstrou desempenho satisfatório e consistente, sendo capaz de produzir estimativas volumétricas clinicamente úteis por meio da aplicação de fatores de escala que compensam a redução de resolução. Dessa forma, os resultados indicam que, mesmo diante de limitações de hardware e compromissos entre resolução e viabilidade computacional, é possível alcançar resultados quantitativos confiáveis e reproduzíveis com relação a cálculo de volume.
+Ainda assim, o modelo demonstrou desempenho satisfatório e consistente, sendo capaz de produzir estimativas volumétricas clinicamente úteis por meio da aplicação de fatores de escala que compensam a redução de resolução. Dessa forma, os resultados indicam que, mesmo diante de limitações de *hardware* e compromissos entre resolução e viabilidade computacional, é possível alcançar resultados quantitativos confiáveis e reproduzíveis com relação a cálculo de volume.
 
 ---
 
 #### 3.8. Cálculo de Volume com Fator de Escala
 
-A estimativa volumétrica das estruturas segmentadas foi realizada a partir das máscaras produzidas pelo modelo U-Net 3D. Entretanto, como o treinamento e a inferência foram conduzidos com volumes reduzidos (128 × 128 × 128 voxels), tornou-se necessário corrigir o volume final para o espaço físico original da imagem. Essa correção foi feita aplicando-se um fator de escala tridimensional, calculado a partir das diferenças entre as dimensões físicas do volume original e da versão reduzida.  
+A estimativa volumétrica das estruturas segmentadas foi realizada a partir das máscaras produzidas pelo modelo U-Net 3D. Entretanto, como o treinamento e a inferência foram conduzidos com volumes reduzidos (128 × 128 × 128 *voxels*), tornou-se necessário corrigir o volume final para o espaço físico original da imagem. Essa correção foi feita aplicando-se um fator de escala tridimensional, calculado a partir das diferenças entre as dimensões físicas do volume original e da versão reduzida.  
 
-Primeiramente, os arquivos NRRD correspondentes à imagem original, à imagem reduzida e à máscara segmentada foram carregados e processados com a biblioteca *nrrd*, sendo extraídas as informações de cabeçalho (*header*) referentes ao espaçamento entre voxels (*spacing*). Esse espaçamento indica a dimensão física de cada voxel em milímetros (mm) ao longo dos três eixos — X (largura), Y (altura) e Z (profundidade) — permitindo converter contagens de voxels em unidades métricas de volume.  
+Primeiramente, os arquivos NRRD correspondentes à imagem original, à imagem reduzida e à máscara segmentada foram carregados e processados com a biblioteca *nrrd*, sendo extraídas as informações de cabeçalho (*header*) referentes ao espaçamento entre *voxels* (*spacing*). Esse espaçamento indica a dimensão física de cada *voxel* em milímetros (mm) ao longo dos três eixos — X (largura), Y (altura) e Z (profundidade) — permitindo converter contagens de *voxels* em unidades métricas de volume.  
 
-O número total de voxels pertencentes à região segmentada foi obtido pela contagem de elementos com valor maior que zero na máscara binária. Em seguida, foi calculado o volume do voxel reduzido, multiplicando-se o espaçamento entre voxels nos três eixos:
+O número total de *voxels* pertencentes à região segmentada foi obtido pela contagem de elementos com valor maior que zero na máscara binária. Em seguida, foi calculado o volume do *voxel* reduzido, multiplicando-se o espaçamento entre *voxels* nos três eixos:
 
 $$
 V_{voxel,red} = s_x \times s_y \times s_z
@@ -483,7 +484,7 @@ $$
 V_{red} = N_{voxels} \times V_{voxel,red}
 $$
 
-onde $$\(N_{voxels}\)$$ representa o número de voxels segmentados.  
+onde $$\(N_{voxels}\)$$ representa o número de *voxels* segmentados.  
 
 Para ajustar esse volume à escala física original, foi calculado um fator de escala volumétrico $$\(vol_{scale}\)$$, representando a razão entre o tamanho físico total do volume original e o da versão reduzida. Esse fator considera a diferença entre as dimensões e o espaçamento dos dois volumes:
 
@@ -514,7 +515,7 @@ Além disso, o volume corrigido foi utilizado para estimar faixas de idade gesta
 
 Mesmo com as limitações impostas pela redução de resolução, o modelo foi capaz de aprender representações espaciais relevantes e produzir segmentações volumétricas e foi possível calcular o volume através do fator de escala.
 
-Como trabalho futuro, planeja-se treinar o modelo em resolução original com hardware mais potente, a fim de aumentar a precisão, utilização das máscaras e preservar a riqueza de detalhes para aplicações clínicas e de pesquisa. Assim, será possível ter produzir segmentações volumétricas úteis, representando um avanço significativo para aplicações clínicas e de pesquisa em segmentação médica tridimensional.
+Como trabalho futuro, planeja-se treinar o modelo em resolução original com *hardware* mais potente, a fim de aumentar a precisão, utilização das máscaras e preservar a riqueza de detalhes para aplicações clínicas e de pesquisa. Assim, será possível ter produzir segmentações volumétricas úteis, representando um avanço significativo para aplicações clínicas e de pesquisa em segmentação médica tridimensional.
 
 ---
 
@@ -541,6 +542,7 @@ Curso de Pós Graduação *Business Intelligence Master*
 
 
 </body>
+
 
 
 
