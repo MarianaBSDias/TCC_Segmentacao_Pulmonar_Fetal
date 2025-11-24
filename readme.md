@@ -4,7 +4,7 @@
 
 #### Aluna: [Mariana Barros dos Santos Dias](https://github.com/MarianaBSDias/)
 #### Orientadora: [Manoela Kohler](https://github.com/manoelakohler).
-#### Co-orientador: [Heron Werner](https://github.com/link_do_github). <!-- caso não aplicável, remover esta linha
+#### Co-orientador: [Heron Werner](https://github.com/link_do_github). <!-- caso não aplicável, remover esta linha -->
 
 ---
 
@@ -539,6 +539,7 @@ Curso de Pós Graduação *Business Intelligence Master*
 
 
 </body>
+
 
 
 
